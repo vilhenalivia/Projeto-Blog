@@ -1,0 +1,32 @@
+version: '3.9'
+
+# Container a ser gerados.
+services:
+  # Container 1
+  djangoapp:
+    container_name: djangoapp
+    # Arquivos para buildar o djangoapp -> Pegar todas as configurações do dockerfile
+    build:
+      context: .
+    # Mapeamento de portas
+    ports:
+      - 8000:8000
+    # Mapeamento de volumes -- Editou, move para o container
+    volumes:
+      - ./djangoapp:/djangoapp
+      - ./data/web/static:/data/web/static/
+      - ./data/web/media:/data/web/media/
+      - ./scripts:/scripts
+    env_file:
+      - ./dotenv_files/.env
+    depends_on:
+      - psql
+
+  # Conteiner 2
+  psql:
+    container_name: psql
+    image: postgres:13-alpine
+    volumes:
+      - ./data/postgres/data:/var/lib/postgresql/data/
+    env_file:
+      - ./dotenv_files/.env

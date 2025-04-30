@@ -13,6 +13,6 @@ urlpatterns = [
 # Ver arquivos de media enviados pelo usuário
 if settings.DEBUG:
     urlpatterns += static(
-        settings.MEDUA_URL,
+        settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
