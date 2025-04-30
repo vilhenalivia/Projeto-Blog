@@ -20,7 +20,8 @@ services:
     env_file:
       - ./dotenv_files/.env
     depends_on:
-      - psql
+      psql:
+        condition: service_healthy
 
   # Conteiner 2
   psql:
@@ -30,3 +31,8 @@ services:
       - ./data/postgres/data:/var/lib/postgresql/data/
     env_file:
       - ./dotenv_files/.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
