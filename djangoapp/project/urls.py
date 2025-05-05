@@ -3,10 +3,11 @@ from django.conf import settings
 # Arquivos estáticos ou de mídia durante o desenvolvimento
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 
 urlpatterns = [
+    path('', include('blog.urls')),
     path('admin/', admin.site.urls),
 ]
 

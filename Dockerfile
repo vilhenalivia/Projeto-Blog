@@ -41,5 +41,7 @@ ENV PATH="/scripts:/venv/bin:$PATH"
 # Muda o usuário para duser
 USER duser
 
+ENV DJANGO_SETTINGS_MODULE=project.settings
+
 # Executa o arquivo scripts/commands.sh
 CMD ["commands.sh"]
