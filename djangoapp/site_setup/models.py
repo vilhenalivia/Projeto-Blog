@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 # MODEL MENU
+# Pertence ao SiteSetup
 class MenuLink(models.Model):
     class Meta:
         verbose_name ="Menu Link"
@@ -12,6 +13,11 @@ class MenuLink(models.Model):
     url_or_path = models.CharField(max_length=2048)
     # Abrir um uma nova área ou não 
     new_tab = models.BooleanField(default=False)
+    site_setup = models.ForeignKey(
+        'SiteSetup', on_delete=models.CASCADE, blank=True, null=True,
+        default=None,
+    )
+
 
     def __str__ (self):
         return self.text
@@ -19,7 +25,7 @@ class MenuLink(models.Model):
 
 # MODEL SITE SETUP
 class SiteSetup(models.Model):
-    class Meta:
+    class Meta: 
         verbose_name = 'Setup'
         verbose_name_plural = 'Setup'
 
