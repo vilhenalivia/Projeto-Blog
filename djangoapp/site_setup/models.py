@@ -1,4 +1,6 @@
 from django.db import models
+from utils.model_validators import validate_png
+from utils.images import resize_image
 
 # Create your models here.
 
@@ -23,7 +25,7 @@ class MenuLink(models.Model):
         return self.text
 
 
-# MODEL SITE SETUP
+# MODEL SITE-SETUP
 class SiteSetup(models.Model):
     class Meta: 
         verbose_name = 'Setup'
@@ -39,5 +41,26 @@ class SiteSetup(models.Model):
     show_pagination = models.BooleanField(default=True)
     show_footer = models.BooleanField(default=True)
 
+    # Icone para pagina
+    favicon = models.ImageField(
+        # Caminho da imagem
+        upload_to= "assets/favicon/%Y/%m",
+        blank=True, default='', validators=[validate_png]
+    )
+
+    # Sobrescrita do save para fazer algo antecendente a ele ou após.
+    def save(self, *args, **kwargs):
+        current_favicon_name = str(self.favicon.name)
+        super().save(*args, **kwargs)
+        favicon_changed =False
+
+        if self.favicon:
+            favicon_changed = current_favicon_name != self.favicon.name
+        
+        if favicon_changed:
+            resize_image(self.favicon, 32)
+
     def __str__(self):
         return self.title
+
+
