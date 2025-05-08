@@ -3,3 +3,4 @@ psycopg2-binary==2.9.10   # Comunicação com o PostegreeSQL
 python-dotenv==1.1.0
 dotenv==0.9.9
 Pillow>=11.2.1
+django-summernote
