@@ -75,7 +75,7 @@ class Post(models.Model):
     slug = models.SlugField(unique=True, default="", null=True, blank=True, max_length=255,)
     excerpt = models.CharField(max_length=150)
     is_published = models.BooleanField(default=False )
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
     cover = models.ImageField(upload_to= 'date/web/media/%Y/%m', blank=True, default='')
     cover_in_post_content = models.BooleanField( default=True, help_text='Se marcado, exibirá a capa dentro do post')
 
