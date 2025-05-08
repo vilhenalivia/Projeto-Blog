@@ -3,6 +3,7 @@ from utils.rands import slugify_new
 from django_summernote.models import AbstractAttachment
 from django.contrib.auth.models import User
 from utils.images import resize_image
+from django.urls import reverse
 
 # Create your models here.
 # MODEL POSTATTACHMENT
@@ -86,11 +87,20 @@ class Page(models.Model):
     def __str__(self):
         return self.title
 
+
+class PostManager(models.Manager):
+    def get_published(self):
+        return self.filter(is_published=True).order_by('-id')
+
+
+
 # MODEL POST
 class Post(models.Model):
     class Meta:
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
+
+    objects = PostManager()
 
     title = models.CharField(max_length=65)
     slug = models.SlugField(unique=True, default="", null=True, blank=True, max_length=255,)
@@ -120,6 +130,13 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    # Pegar a url e redirecionar ao post
+    def get_absolute_url(self):
+        if not self.is_published:
+            return reverse('blog:index')
+        return reverse('blog:post', args=(self.slug,) )
+
+    
 
     #Redimencionamento de imagem
     def save(self, *args, **kwargs):
