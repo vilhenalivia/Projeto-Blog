@@ -4,8 +4,32 @@ from blog.models import Post, Page
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.http import Http404
+from django.views.generic import ListView
 
+# Quantos itens por página
 PER_PAGE = 9
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/pages/index.html'
+    #lista de objetos
+    context_object_name = 'page_obj'
+    ordering = '-pk',
+    paginate_by = PER_PAGE
+    queryset = Post.objects.get_published()
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     queryset = queryset.filter(is_published=True)
+    #     return queryset
+     
+    # Sobrescrevendo o contexto
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({ 'page_title': 'Home - ' })
+        return context
+    
+
 
 #view INDEX
 def index(request):
