@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render
 from blog.models import Post, Page
 from django.db.models import Q
@@ -79,8 +78,20 @@ class CategoryListView(PostListView):
         ctx.update({ 'page_title' : page_title })
         return ctx
     
+class TagListView(PostListView):
+    # Erro 404 - Caso vazio
+    allow_empty =  False
 
+    # Query
+    def get_queryset(self):
+        return super().get_queryset().filter(tags__slug=self.kwargs.get('slug'))
     
+    # Contexto
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        page_title = f'{self.object_list[0].tags.firs().name} - Tag - '
+        ctx.update({ 'page_title' : page_title })
+        return ctx
 
 # view PAGE
 def page(request, slug):
@@ -109,44 +120,6 @@ def post(request, slug):
         'page_title': page_title,
     }
     return render(request,'blog/pages/post.html', context)
-
-#view CATEGORIA
-def category(request, slug):
-    posts = Post.objects.get_published().filter(category__slug =slug)
-
-    if len(posts) ==  0:
-        raise Http404
-
-    paginator = Paginator(posts, PER_PAGE)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    page_title = f'{page_obj[0].category.name} - Categoria - '
-
-    context ={ 
-        'page_obj': page_obj, 
-        'page_title': page_title,
-    } 
-
-    return render(request,'blog/pages/index.html', context)
-
-#view TAGS
-def tag(request, slug):
-    posts = Post.objects.get_published().filter(tags__slug =slug)
-
-    if len(posts) ==  0:
-        raise Http404 
-    
-    paginator = Paginator(posts, PER_PAGE)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    page_title = f'{page_obj[0].tags.first().name} - Tag - '
-    context ={ 
-        'page_obj': page_obj, 
-        'page_title': page_title,
-    } 
-
-    return render(request,'blog/pages/index.html', context)
 
 #view SEARCH
 def search(request):
