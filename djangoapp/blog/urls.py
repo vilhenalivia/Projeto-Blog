@@ -11,7 +11,7 @@ urlpatterns = [
     path('tag/<slug:slug>', views.TagListView.as_view(), name='tag'),
     path('search/', views.SearchListView.as_view(), name='search'),
     path('page/<slug:slug>', views.PageDetailView.as_view(), name='page'),
-    path('post/<slug:slug>/', views.post, name='post'),
+    path('post/<slug:slug>/', views.PostDetailView.as_view(), name='post'),
     
     
 ]
